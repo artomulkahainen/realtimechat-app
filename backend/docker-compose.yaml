@@ -4,7 +4,8 @@ services:
             context: .
             dockerfile: Dockerfile
         container_name: realtimechat-backend
-        restart: unless-stopped
+        volumes:
+            - .:/app
         ports:
             - '3001:3001'
         environment:
@@ -12,7 +13,7 @@ services:
             DB_USER: 'postgres'
             DB_PASSWORD: 'testdb'
             DB_NAME: 'chatdb'
-            DB_PORT: 5435
+            DB_PORT: 5432
             PORT: '3001'
         depends_on:
             - db
@@ -26,7 +27,7 @@ services:
             POSTGRES_PASSWORD: testdb
             POSTGRES_DB: chatdb
         ports:
-            - '5435:5435'
+            - '5432:5432'
         volumes:
             - pg_data:/var/lib/postgresql/data
 
