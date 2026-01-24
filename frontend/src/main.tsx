@@ -1,0 +1,16 @@
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+import { MessageProvider } from './store/MessagesContext.tsx';
+import { UserProvider } from './store/UserContext.tsx';
+
+createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+        <UserProvider>
+            <MessageProvider>
+                <App />
+            </MessageProvider>
+        </UserProvider>
+    </StrictMode>
+);

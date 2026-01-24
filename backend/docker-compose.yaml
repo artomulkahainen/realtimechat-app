@@ -17,7 +17,16 @@ services:
             PORT: '3001'
         depends_on:
             - db
-
+    ui:
+        build:
+            context: ../frontend
+            dockerfile: Dockerfile
+        volumes:
+            - ../frontend:/app
+        ports:
+            - '5173:5173'
+        depends_on:
+            - api
     db:
         image: postgres:17-alpine
         container_name: realtimechat-db
