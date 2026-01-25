@@ -17,10 +17,13 @@ services:
             PORT: '3001'
         depends_on:
             - db
+            - cache
+            - rabbitmq
     ui:
         build:
             context: ../frontend
             dockerfile: Dockerfile
+        container_name: realtimechat-frontend
         volumes:
             - ../frontend:/app
         ports:
@@ -39,6 +42,25 @@ services:
             - '5432:5432'
         volumes:
             - pg_data:/var/lib/postgresql/data
+    cache:
+        container_name: realtimechat-cache
+        image: valkey/valkey:8-alpine3.22
+        ports:
+            - '6379:6379'
+    rabbitmq:
+        image: rabbitmq:4.2.3-management-alpine
+        container_name: realtimechat-message-queue
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+        environment:
+            RABBITMQ_DEFAULT_USER: rabbitmq-user
+            RABBITMQ_DEFAULT_PASS: rabbit-pw
+        healthcheck:
+            test: ['CMD', 'rabbitmqctl', 'status']
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
 volumes:
     pg_data:
