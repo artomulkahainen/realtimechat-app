@@ -1,26 +1,15 @@
 import { Button, TextField } from '@mui/material';
-import type { FormEvent } from 'react';
+import useSimpleForm from '../hooks/useSimpleForm';
 import styles from './styles/SimpleForm.module.css';
 
 type Props = {
     label: string;
-    isLoading: boolean;
-    onSend: (msg: string) => Promise<void>;
+    onSend: (msg: string) => Promise<void> | void;
+    isLoading?: boolean;
 };
 
-export default function SimpleForm({ label, isLoading, onSend }: Props) {
-    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-
-        const data = new FormData(e.currentTarget);
-        const rawMsg = data.get('message');
-
-        const msg = typeof rawMsg === 'string' ? rawMsg : '';
-
-        if (!msg) return;
-        e.currentTarget.reset();
-        await onSend(msg);
-    }
+export default function SimpleForm({ label, onSend, isLoading }: Props) {
+    const { handleSubmit } = useSimpleForm({ onSend });
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>

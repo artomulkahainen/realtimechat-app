@@ -6,7 +6,6 @@ import useWebSocket from '../hooks/useWebSocket';
 interface MessageContextValue {
     messages: MessageDTO[];
     initMessages: () => Promise<void>;
-    addMessage: (message: MessageDTO) => void;
     isLoading: boolean;
 }
 
@@ -32,14 +31,13 @@ export function MessageProvider({ children }: { children: ReactNode }) {
 
     return (
         <MessageContext.Provider
-            value={{ messages, initMessages, addMessage, isLoading: loading }}
+            value={{ messages, initMessages, isLoading: loading }}
         >
             {children}
         </MessageContext.Provider>
     );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useMessages(): MessageContextValue {
     const ctx = useContext(MessageContext);
     if (!ctx) {

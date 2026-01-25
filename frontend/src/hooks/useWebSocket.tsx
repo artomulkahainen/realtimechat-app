@@ -11,7 +11,7 @@ enum ConnectionStatus {
     ERROR = 3,
 }
 
-function useWebSocket({ addMessage }: Props) {
+export default function useWebSocket({ addMessage }: Props) {
     const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(
         ConnectionStatus.DISCONNECTED
     );
@@ -24,7 +24,6 @@ function useWebSocket({ addMessage }: Props) {
 
         socketRef.current = socket;
 
-        // Setup event handlers
         socket.onopen = () => {
             console.log('WebSocket connection established');
             setConnectionStatus(ConnectionStatus.CONNECTED);
@@ -62,5 +61,3 @@ function useWebSocket({ addMessage }: Props) {
 
     return { connectionStatus, socketRef };
 }
-
-export default useWebSocket;

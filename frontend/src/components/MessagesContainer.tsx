@@ -1,7 +1,7 @@
 import { useMessages } from '../store/MessagesContext';
 import styles from './styles/MessagesContainer.module.css';
 
-function MessagesContainer() {
+export default function MessagesContainer() {
     const { messages } = useMessages();
 
     return (
@@ -14,5 +14,3 @@ function MessagesContainer() {
         </div>
     );
 }
-
-export default MessagesContainer;
