@@ -2,4 +2,6 @@
     border: 1px solid black;
     width: 95%;
     height: 90%;
+    max-height: 90%;
+    overflow-y: auto;
 }

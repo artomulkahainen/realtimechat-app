@@ -1,7 +1,8 @@
+import dayjs from 'dayjs';
 import { createContext, useContext, useState, type ReactNode } from 'react';
+import useWebSocket from '../hooks/useWebSocket';
 import type { MessageDTO } from '../services/dto/message';
 import { getMessages } from '../services/messages';
-import useWebSocket from '../hooks/useWebSocket';
 
 interface MessageContextValue {
     messages: MessageDTO[];
@@ -19,7 +20,10 @@ export function MessageProvider({ children }: { children: ReactNode }) {
 
     async function initMessages() {
         setLoading(true);
-        setMessages(await getMessages());
+        const sortedMessages = (await getMessages()).sort((a, b) =>
+            dayjs(a.createdAt).diff(b.createdAt)
+        );
+        setMessages(sortedMessages);
         setLoading(false);
     }
 
