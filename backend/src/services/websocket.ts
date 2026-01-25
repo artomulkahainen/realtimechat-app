@@ -1,33 +1,35 @@
 import type { Context } from 'hono';
 import type { Message } from '../models/Message.model.ts';
 import { toDto } from '../mappers/message.ts';
+import type { WSContext, WSMessageReceive } from 'hono/ws';
 
-const wsClients = new Set<WebSocket>();
+const wsClients = new Set<WSContext>();
 
 export function handleWebsocketConnection(c: Context) {
-    const ws = c.get('websocket');
-
-    wsClients.add(ws);
-    console.log('WS connected: ', wsClients.size);
-
-    const remove = () => {
-        wsClients.delete(ws);
-        console.log('WS disconnected: ', wsClients.size);
+    return {
+        onOpen(evt: Event, ws: WSContext) {
+            console.log('about to add new ws client');
+            wsClients.add(ws);
+            console.log(wsClients);
+        },
+        onMessage(
+            evt: MessageEvent<WSMessageReceive>,
+            ws: WSContext<WebSocket>
+        ) {
+            console.log(`Message from client: ${evt.data}`);
+            ws.send('Hello from server!');
+        },
+        onClose: () => {
+            console.log('Connection closed');
+        },
     };
-    ws.on('close', remove);
-    ws.on('error', (err: Error) => {
-        console.error('WS error', err);
-        remove();
-    });
-
-    return {};
 }
 
 export function broadcastMessageToAllConnectedUsers(message: Message) {
     const text = JSON.stringify(toDto(message));
 
     wsClients.forEach((client) => {
-        if (client.readyState === client.OPEN) {
+        if (client.readyState === 1) {
             client.send(text);
         }
     });

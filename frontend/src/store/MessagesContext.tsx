@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { MessageDTO } from '../services/dto/message';
 import { getMessages } from '../services/messages';
+import useWebSocket from '../hooks/useWebSocket';
 
 interface MessageContextValue {
     messages: MessageDTO[];
@@ -26,6 +27,8 @@ export function MessageProvider({ children }: { children: ReactNode }) {
     function addMessage(message: MessageDTO) {
         setMessages((prev) => [...prev, message]);
     }
+
+    useWebSocket({ addMessage });
 
     return (
         <MessageContext.Provider
