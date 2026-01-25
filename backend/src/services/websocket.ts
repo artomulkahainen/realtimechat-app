@@ -1,14 +1,8 @@
 import type { Context } from 'hono';
-import type { Message } from '../models/Message.model.ts';
-import { toDto } from '../mappers/message.ts';
 import type { WSContext } from 'hono/ws';
-import { Redis as Valkey } from 'iovalkey';
-
-const valkey = new Valkey(6379, 'cache');
-const sub = new Valkey(6379, 'cache');
-
-const CHANNEL_NAME = 'chat';
-sub.subscribe(CHANNEL_NAME);
+import { toDto } from '../mappers/message.ts';
+import type { Message } from '../models/Message.model.ts';
+import { CHANNEL_NAME, sub, valkey } from './cache.ts';
 
 const wsClients = new Set<WSContext>();
 
