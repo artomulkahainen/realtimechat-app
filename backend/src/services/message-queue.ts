@@ -11,6 +11,7 @@ if (!RABBIT_USER || !RABBIT_PASSWORD || !RABBIT_HOST || !RABBIT_PORT) {
     );
 }
 
+const queueName = 'MESSAGES';
 const connection = await startConnection();
 const channel = await startChannel(connection);
 
@@ -23,8 +24,6 @@ async function startConnection() {
     } catch (e) {
         console.error('Error with connecting to rabbitmq: ', e);
         throw new Error('RabbitMQ Connection Failed');
-    } finally {
-        console.log('RabbitMQ: Connection Created Succesfully');
     }
 }
 
@@ -35,15 +34,11 @@ async function startChannel(connection: ChannelModel) {
     } catch (e) {
         console.error('Error with starting the channel:', e);
         throw new Error('RabbitMQ Channel Creation Failed');
-    } finally {
-        console.log('RabbitMQ: Channel created succesfully');
     }
 }
 
 export async function addMessageToQueue<T extends object>(message: T) {
     try {
-        const queueName = 'MESSAGES';
-
         await channel.assertQueue(queueName, {
             durable: true,
         });
@@ -55,6 +50,20 @@ export async function addMessageToQueue<T extends object>(message: T) {
         console.log(`Sent to ${queueName}:`, message);
     } catch (e) {
         console.error('Failed to add message to queue:', e);
-        throw new Error('Failed');
+        throw new Error('Failed to add message to the queue');
+    }
+}
+
+export async function initQueue() {
+    console.log('Initializing the queue...');
+    try {
+        await channel.assertQueue(queueName, {
+            durable: true,
+        });
+
+        console.log('Queue assertion completed!');
+    } catch (e) {
+        console.error('Failed to initialize the RabbitMQ Queue:', e);
+        throw new Error('Failed to init the queue');
     }
 }

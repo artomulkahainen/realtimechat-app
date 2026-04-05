@@ -19,12 +19,15 @@ services:
             CACHE_HOST: cache
             RABBIT_HOST: rabbitmq
             RABBIT_PORT: 5672
-            RABBIT_USER: fsdf
-            RABBIT_PASWORD: adad
+            RABBIT_USER: rabbitmq-user
+            RABBIT_PASSWORD: rabbit-pw
         depends_on:
-            - db
-            - cache
-            - rabbitmq
+            db:
+                condition: service_started
+            cache:
+                condition: service_started
+            rabbitmq:
+                condition: service_healthy
     ui:
         build:
             context: ../frontend
@@ -64,7 +67,7 @@ services:
             RABBITMQ_DEFAULT_PASS: rabbit-pw
         healthcheck:
             test: ['CMD', 'rabbitmqctl', 'status']
-            interval: 10s
+            interval: 5s
             timeout: 5s
             retries: 5
 
