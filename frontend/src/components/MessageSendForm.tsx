@@ -10,6 +10,8 @@ export default function MessageSendForm() {
             <SimpleForm
                 label="Message"
                 onSend={handleMessageSubmit}
+                textFieldAriaLabel="Text field for your message you want to send"
+                buttonAriaLabel="With this button, you can send your message, if it's long enough"
                 isLoading={loading}
             />
         </div>
