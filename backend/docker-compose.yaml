@@ -14,7 +14,13 @@ services:
             DB_PASSWORD: 'testdb'
             DB_NAME: 'chatdb'
             DB_PORT: 5432
-            PORT: '3001'
+            PORT: 3001
+            CACHE_PORT: 6379
+            CACHE_HOST: cache
+            RABBIT_HOST: rabbitmq
+            RABBIT_PORT: 5672
+            RABBIT_USER: fsdf
+            RABBIT_PASWORD: adad
         depends_on:
             - db
             - cache
