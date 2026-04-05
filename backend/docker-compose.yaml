@@ -17,17 +17,11 @@ services:
             PORT: 3001
             CACHE_PORT: 6379
             CACHE_HOST: cache
-            RABBIT_HOST: rabbitmq
-            RABBIT_PORT: 5672
-            RABBIT_USER: rabbitmq-user
-            RABBIT_PASSWORD: rabbit-pw
         depends_on:
             db:
                 condition: service_started
             cache:
                 condition: service_started
-            rabbitmq:
-                condition: service_healthy
     ui:
         build:
             context: ../frontend
@@ -56,20 +50,6 @@ services:
         image: valkey/valkey:8-alpine3.22
         ports:
             - '6379:6379'
-    rabbitmq:
-        image: rabbitmq:4.2.3-management-alpine
-        container_name: realtimechat-message-queue
-        ports:
-            - '5672:5672'
-            - '15672:15672'
-        environment:
-            RABBITMQ_DEFAULT_USER: rabbitmq-user
-            RABBITMQ_DEFAULT_PASS: rabbit-pw
-        healthcheck:
-            test: ['CMD', 'rabbitmqctl', 'status']
-            interval: 5s
-            timeout: 5s
-            retries: 5
 
 volumes:
     pg_data:

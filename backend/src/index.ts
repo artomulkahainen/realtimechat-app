@@ -8,7 +8,6 @@ import { MESSAGES_PATH, WEBSOCKET_PATH } from './routes.ts';
 import { createMessage, findMessages } from './services/message.ts';
 import { handleWebsocketConnection } from './services/websocket.ts';
 import { validateCreateMessage } from './validators/message.ts';
-import { initQueue } from './services/message-queue.ts';
 
 const app = new Hono();
 const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
@@ -32,8 +31,6 @@ app.post(MESSAGES_PATH, validateCreateMessage, async ({ req, json }) => {
         try {
             await sequelize.sync({ alter: false });
             console.log('Database synchronized');
-
-            await initQueue();
 
             const server = serve(
                 {
